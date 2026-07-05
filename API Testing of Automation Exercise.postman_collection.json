@@ -1,0 +1,602 @@
+{
+  "info": {
+    "_postman_id": "52459a1f-7192-44e7-9578-3d270a5338d3",
+    "name": "API Testing of Automation Exercise",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56387646",
+    "_collection_link": "https://go.postman.co/collection/56387646-52459a1f-7192-44e7-9578-3d270a5338d3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "response time",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}",
+              "host": [
+                "{{base_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returned email matches request parameter\", function () {",
+                  "    const requestEmail = pm.request.url.query.get(\"email\");",
+                  "    const responseJson = pm.response.json();",
+                  "    const returnedEmail = responseJson.user ? responseJson.user.email : responseJson.email;",
+                  "    pm.expect(returnedEmail).to.eql(requestEmail);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "test.project@gmail.com",
+                  "type": "text",
+                  "uuid": "5e78eca3-15ac-4bac-a2a0-e4287e0ea185"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}api/getUserDetailByEmail",
+              "host": [
+                "{{base_url}}api"
+              ],
+              "path": [
+                "getUserDetailByEmail"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Login Successful - Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response code is 200\", () => {",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Login message is correct\", () => {",
+                  "    pm.expect(jsonData).to.have.property(\"message\");",
+                  "    pm.expect(jsonData.message).to.match(/User exists|success/);",
+                  "});",
+                  "",
+                  "pm.environment.set(\"{{user_email}}\", \"testuser1@gmail.com\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "test.project@gmail.com",
+                  "type": "text",
+                  "uuid": "39334faf-daff-4e97-8165-ea81a062ebd6"
+                },
+                {
+                  "key": "password",
+                  "value": "Paroli@1",
+                  "type": "text",
+                  "uuid": "b4b203ea-4764-430a-a611-31dfd8993c49"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}api/verifyLogin",
+              "host": [
+                "{{base_url}}api"
+              ],
+              "path": [
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "get all products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status Code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response Time is acceptable (< 800ms)\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains products array\", () => {\r",
+                  "    pm.expect(jsonData).to.have.property(\"products\");\r",
+                  "    pm.expect(jsonData.products).to.be.an(\"array\").that.is.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Each product has required fields\", () => {\r",
+                  "    jsonData.products.forEach((product, index) => {\r",
+                  "        pm.expect(product, `Product ${index}`).to.have.all.keys(\"id\", \"name\", \"price\", \"brand\", \"category\");\r",
+                  "        pm.expect(product.id).to.be.a(\"number\");\r",
+                  "        pm.expect(product.name).to.be.a(\"string\").and.not.empty;\r",
+                  "        pm.expect(product.price).to.be.a(\"string\").and.not.empty;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "// Save first product ID for chaining\r",
+                  "if (jsonData.products && jsonData.products.length > 0) {\r",
+                  "    pm.environment.set(\"product_id\", jsonData.products[0].id);\r",
+                  "}\r",
+                  "pm.test(\"Products have valid category structure\", () => {\r",
+                  "    jsonData.products.forEach((product, index) => {\r",
+                  "        pm.expect(product, `Product ${index}`).to.have.property(\"category\");\r",
+                  "        \r",
+                  "        const category = product.category;\r",
+                  "        pm.expect(category).to.have.property(\"usertype\");\r",
+                  "        pm.expect(category).to.have.property(\"category\");\r",
+                  "        \r",
+                  "        pm.expect(category.usertype).to.have.property(\"usertype\");\r",
+                  "        pm.expect(category.category).to.be.a(\"string\").and.not.empty;\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/productsList",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "productsList"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status Code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains products\", () => {\r",
+                  "    pm.expect(jsonData).to.have.property(\"products\");\r",
+                  "    pm.expect(jsonData.products).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Search returned relevant results\", () => {\r",
+                  "    const searchTerm = \"t-shirt\";   // change according to what you searched\r",
+                  "    jsonData.products.forEach((product) => {\r",
+                  "        const name = product.name.toLowerCase();\r",
+                  "        pm.expect(name).to.include(searchTerm.toLowerCase());\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has responseCode 200\", () => {\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "t-shirt",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/searchProduct",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "searchProduct"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "brand list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Brands List - Status 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains brands array\", () => {\r",
+                  "    pm.expect(jsonData).to.have.property(\"brands\");\r",
+                  "    pm.expect(jsonData.brands).to.be.an(\"array\").that.is.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Each brand has id and name\", () => {\r",
+                  "    jsonData.brands.forEach((brand, index) => {\r",
+                  "        pm.expect(brand, `Brand ${index}`).to.have.property(\"id\");\r",
+                  "        pm.expect(brand, `Brand ${index}`).to.have.property(\"brand\");\r",
+                  "        pm.expect(brand.brand).to.be.a(\"string\").and.not.empty;\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/brandsList",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "brandsList"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Test Cases",
+      "item": [
+        {
+          "name": "login with wrong credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Login should fail for invalid input\", function () {\r",
+                  "    pm.expect(jsonData.message).to.exist;\r",
+                  "    pm.expect(jsonData.message).to.not.eql(\"Success\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "email.test@gmail.com",
+                  "type": "text",
+                  "uuid": "b071e8b9-d67a-4f50-acbe-8aba6c5acac5"
+                },
+                {
+                  "key": "password",
+                  "value": "abCdefg",
+                  "type": "text",
+                  "uuid": "6be38ce3-23d9-4650-b4d6-72dd3d48ddb0"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login with empty email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Login should fail for invalid input\", function () {\r",
+                  "    pm.expect(jsonData.message).to.exist;\r",
+                  "    pm.expect(jsonData.message).to.not.eql(\"Success\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "dce44ba3-325c-4d3c-8208-be3fb333b26e"
+                },
+                {
+                  "key": "password",
+                  "value": "123456789",
+                  "type": "text",
+                  "uuid": "e5ff61f2-8ce5-4c8e-a209-7e4fe7793bef"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "chained requests",
+      "item": [
+        {
+          "name": "log in",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login request executed\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"login_status\", \"success\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "test.project@gmail.com",
+                  "type": "text",
+                  "uuid": "8f29bc24-9809-4ca3-afb3-ce38ccf8b075"
+                },
+                {
+                  "key": "password",
+                  "value": "Paroli@1",
+                  "type": "text",
+                  "uuid": "13490843-639a-4ca5-8544-07eca731fb80"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Best Script for GET Products List\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time < 800ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response has products array\", () => {\r",
+                  "    pm.expect(jsonData).to.have.property(\"products\");\r",
+                  "    pm.expect(jsonData.products).to.be.an(\"array\").that.is.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Each product has required fields\", () => {\r",
+                  "    jsonData.products.forEach((product) => {\r",
+                  "        pm.expect(product).to.have.property(\"id\");\r",
+                  "        pm.expect(product).to.have.property(\"name\");\r",
+                  "        pm.expect(product).to.have.property(\"price\");\r",
+                  "        pm.expect(product).to.have.property(\"brand\");\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "// Save first product ID for future chaining (if needed)\r",
+                  "if (jsonData.products && jsonData.products.length > 0) {\r",
+                  "    pm.environment.set(\"product_id\", jsonData.products[0].id);\r",
+                  "    pm.test(\"Product ID saved successfully\", () => {\r",
+                  "        pm.expect(pm.environment.get(\"product_id\")).to.exist;\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/productsList",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "productsList"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
