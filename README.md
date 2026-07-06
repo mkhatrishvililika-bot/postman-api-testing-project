@@ -1,29 +1,32 @@
 # API Testing Project - Automation Exercise (Postman)
 
-## About This Project
-This is my Postman collection for API Testing practice. I tested different endpoints of Automation Exercise website.
+## Project Overview
+API Testing project built with Postman for practice and portfolio.
 
-## What I Tested
-- Login (Positive and Negative cases)
-- Get All Products
-- Search Product
-- Brand List
-- Chained Requests (Login → Get Products)
+## Test Coverage
+- Authentication (Login)
+- Products (Get All Products + Search)
+- Brands
 - Negative Test Cases
+- Chained Requests (End-to-End Flow)
 
-## Tools Used
+## Tools
 - Postman
-- JavaScript for test scripts
+- JavaScript Test Scripts
 - Environment Variables
-- Chained API requests
-
-## How to Run
-1. Download the collection JSON file
-2. Import it into Postman
-3. Run the "Chained Requests" folder
 
 ## Screenshots
-(You can add your screenshots here later)
 
-## Goal
-To demonstrate my API testing skills for Junior QA / API Tester positions.
+![Collection Structure](portfolio.png)
+![Test Results](portfolio2.png)
+![Chained Requests](portfolio3.png)
+![More Tests](portfolio4.png)
+
+## How to Run
+1. Import the collection JSON file into Postman
+2. Import the environment
+3. Run the requests
+
+---
+
+This is my practice project for Junior QA / API Testing roles.
